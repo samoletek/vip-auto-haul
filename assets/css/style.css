@@ -6,7 +6,7 @@
 /* ===== Base Styles ===== */
 :root {
     /* Main color palette */
-    --primary-color: #0f4c81;     /* Deep blue */
+    --primary-color: #9D7A50;     /* Deep bronze/gold */
     --secondary-color: #d4af37;   /* Gold */
     --dark-color: #121212;        /* Almost black */
     --light-color: #ffffff;       /* White */
@@ -16,8 +16,8 @@
     --accent-color: #d4af37;      /* Same as secondary for accents */
     
     /* Typography */
-    --heading-font: 'Playfair Display', serif;
-    --body-font: 'Raleway', sans-serif;
+    --heading-font: 'Poppins', sans-serif;
+    --body-font: 'Inter', sans-serif;
     
     /* Spacing */
     --section-spacing: 6rem;
@@ -34,7 +34,7 @@
 }
 
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Raleway:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
 
 /* Reset & Base Styles */
 *, *::before, *::after {

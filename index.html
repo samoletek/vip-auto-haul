@@ -427,7 +427,7 @@
                 </div>
                 
                 <div class="contact-form-container">
-                    <form class="contact-form">
+                    <form class="contact-form" action="https://formspree.io/f/info@vipautohaul.com" method="POST">
                         <h3>Request a Quote</h3>
                         
                         <div class="form-group">
@@ -486,6 +486,10 @@
                             <textarea id="message" name="message" rows="3"></textarea>
                         </div>
                         
+                        <input type="hidden" name="_subject" value="New Quote Request from VIP Auto Haul Website">
+                        <input type="text" name="_gotcha" style="display:none">
+                        <input type="hidden" name="_next" value="https://vipautohaul.com/thank-you">
+                        
                         <button type="submit" class="primary-button full-width">Submit Request</button>
                     </form>
                 </div>
@@ -536,8 +540,10 @@
                 <div class="footer-newsletter">
                     <h4>Stay Updated</h4>
                     <p>Subscribe to our newsletter for industry insights and service updates.</p>
-                    <form class="newsletter-form">
-                        <input type="email" placeholder="Your email address" required>
+                    <form class="newsletter-form" action="https://formspree.io/f/info@vipautohaul.com" method="POST">
+                        <input type="email" name="email" placeholder="Your email address" required>
+                        <input type="hidden" name="_subject" value="New Newsletter Subscription">
+                        <input type="text" name="_gotcha" style="display:none">
                         <button type="submit">Subscribe</button>
                     </form>
                 </div>

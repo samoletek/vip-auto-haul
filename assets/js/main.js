@@ -188,8 +188,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
+            // Only validate, don't prevent default submission
             let isValid = true;
             const requiredFields = contactForm.querySelectorAll('[required]');
             
@@ -212,11 +211,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             }
             
-            if (isValid) {
-                // Here you would typically send the form data to the server
-                alert('Thank you for your quote request! Our team will contact you shortly.');
-                contactForm.reset();
-            } else {
+            if (!isValid) {
+                e.preventDefault(); // Prevent submission only if validation fails
                 alert('Please fill in all required fields correctly.');
             }
         });
@@ -237,22 +233,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (newsletterForm) {
         newsletterForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
             const emailInput = newsletterForm.querySelector('input[type="email"]');
             
             if (emailInput && emailInput.value.trim()) {
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 
                 if (!emailPattern.test(emailInput.value)) {
+                    e.preventDefault();
                     alert('Please enter a valid email address.');
                     return;
                 }
                 
-                // Here you would typically send the subscription request to a server
-                alert('Thank you for subscribing to our newsletter!');
-                newsletterForm.reset();
+                // Form will be submitted to Formspree
             } else {
+                e.preventDefault();
                 alert('Please enter your email address.');
             }
         });
