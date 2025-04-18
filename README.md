@@ -1,7 +1,5 @@
 # VIP Auto Haul - Premium Vehicle Transportation
 
-![VIP Auto Haul Logo](assets/images/logo-placeholder.png)
-
 A sleek, premium one-page website for VIP Auto Haul, a luxury vehicle transportation company. This project was created as a rapid development exercise, with the entire design and implementation completed in just 15 minutes.
 
 ## Overview
