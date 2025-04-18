@@ -1,22 +1,26 @@
 /**
  * VIP Auto Haul - Main JavaScript File
+ * Version 2.0
  */
 
-// Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Header scroll effect
     const header = document.querySelector('header');
-    const scrollThreshold = 50;
     
     window.addEventListener('scroll', function() {
-        if (window.scrollY > scrollThreshold) {
+        if (window.scrollY > 50) {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
         }
     });
-
-    // Mobile menu toggle
+    
+    // Trigger scroll check on page load
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    }
+    
+    // Mobile menu functionality
     const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
     const mainNav = document.querySelector('.main-nav');
     
@@ -24,7 +28,6 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileMenuToggle.addEventListener('click', function() {
             mainNav.classList.toggle('active');
             
-            // Change icon based on menu state
             const icon = this.querySelector('i');
             if (mainNav.classList.contains('active')) {
                 icon.classList.remove('fa-bars');
@@ -35,78 +38,29 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    // Feature items accordion
-    const featureItems = document.querySelectorAll('.feature-item');
     
-    featureItems.forEach(item => {
-        const header = item.querySelector('h3');
-        
-        header.addEventListener('click', function() {
-            // Close all other items
-            featureItems.forEach(otherItem => {
-                if (otherItem !== item) {
-                    otherItem.classList.remove('active');
-                }
-            });
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(e) {
+        if (mainNav && mainNav.classList.contains('active') && 
+            !e.target.closest('.main-nav') && 
+            !e.target.closest('.mobile-menu-toggle')) {
+            mainNav.classList.remove('active');
             
-            // Toggle current item
-            item.classList.toggle('active');
-        });
+            const icon = mobileMenuToggle.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
     });
     
-    // Open first feature item by default
-    if (featureItems.length > 0) {
-        featureItems[0].classList.add('active');
-    }
-
-    // FAQ accordion functionality
-    const faqItems = document.querySelectorAll('.faq-item');
-    
-    faqItems.forEach(item => {
-        const question = item.querySelector('.faq-question');
-        const toggleIcon = item.querySelector('.toggle-icon i');
-        
-        question.addEventListener('click', function() {
-            // Close all other FAQs
-            faqItems.forEach(otherItem => {
-                if (otherItem !== item && otherItem.classList.contains('active')) {
-                    otherItem.classList.remove('active');
-                    const otherIcon = otherItem.querySelector('.toggle-icon i');
-                    otherIcon.classList.remove('fa-minus');
-                    otherIcon.classList.add('fa-plus');
-                }
-            });
-            
-            // Toggle current FAQ
-            item.classList.toggle('active');
-            
-            // Update icon
-            if (item.classList.contains('active')) {
-                toggleIcon.classList.remove('fa-plus');
-                toggleIcon.classList.add('fa-minus');
-            } else {
-                toggleIcon.classList.remove('fa-minus');
-                toggleIcon.classList.add('fa-plus');
-            }
-        });
-    });
-    
-    // Open first FAQ by default
-    if (faqItems.length > 0) {
-        faqItems[0].classList.add('active');
-    }
-
     // Smooth scrolling for navigation links
-    const navLinks = document.querySelectorAll('a[href^="#"]');
+    const scrollLinks = document.querySelectorAll('a[href^="#"]');
     
-    navLinks.forEach(link => {
+    scrollLinks.forEach(link => {
         link.addEventListener('click', function(e) {
-            // Get the target element
             const targetId = this.getAttribute('href');
             
-            // Skip if it's just "#" or an external link
-            if (targetId === '#' || targetId.startsWith('#!')) {
+            // Skip if it's just "#" or empty
+            if (targetId === '#' || !targetId) {
                 return;
             }
             
@@ -127,7 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 const headerHeight = header.offsetHeight;
                 const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
                 
-                // Smooth scroll to target
                 window.scrollTo({
                     top: targetPosition,
                     behavior: 'smooth'
@@ -135,15 +88,108 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-
-    // Form validation and submission
+    
+    // Testimonial slider functionality
+    const testimonialDots = document.querySelectorAll('.testimonial-dots .dot');
+    const testimonialItems = document.querySelectorAll('.testimonial-item');
+    
+    if (testimonialDots.length > 0 && testimonialItems.length > 0) {
+        testimonialDots.forEach((dot, index) => {
+            dot.addEventListener('click', function() {
+                // Remove active class from all dots and items
+                testimonialDots.forEach(d => d.classList.remove('active'));
+                testimonialItems.forEach(item => item.classList.remove('active'));
+                
+                // Add active class to clicked dot and corresponding item
+                this.classList.add('active');
+                testimonialItems[index].classList.add('active');
+            });
+        });
+        
+        // Auto-rotate testimonials
+        let currentIndex = 0;
+        const autoRotate = setInterval(function() {
+            currentIndex = (currentIndex + 1) % testimonialItems.length;
+            
+            testimonialDots.forEach(d => d.classList.remove('active'));
+            testimonialItems.forEach(item => item.classList.remove('active'));
+            
+            testimonialDots[currentIndex].classList.add('active');
+            testimonialItems[currentIndex].classList.add('active');
+        }, 5000);
+        
+        // Stop auto-rotate when user interacts with dots
+        testimonialDots.forEach(dot => {
+            dot.addEventListener('click', function() {
+                clearInterval(autoRotate);
+            });
+        });
+    }
+    
+    // Pricing toggle
+    const pricingSwitch = document.getElementById('pricing-switch');
+    const standardLabel = document.querySelector('.toggle-label:first-child');
+    const premiumLabel = document.querySelector('.toggle-label:last-child');
+    const standardPricing = document.querySelector('.pricing-card.standard');
+    const premiumPricing = document.querySelector('.pricing-card.premium');
+    
+    if (pricingSwitch && standardPricing && premiumPricing) {
+        pricingSwitch.addEventListener('change', function() {
+            if (this.checked) {
+                standardPricing.classList.remove('active');
+                premiumPricing.classList.add('active');
+                standardLabel.classList.remove('active');
+                premiumLabel.classList.add('active');
+            } else {
+                premiumPricing.classList.remove('active');
+                standardPricing.classList.add('active');
+                premiumLabel.classList.remove('active');
+                standardLabel.classList.add('active');
+            }
+        });
+        
+        // Labels can also toggle the switch
+        standardLabel.addEventListener('click', function() {
+            pricingSwitch.checked = false;
+            pricingSwitch.dispatchEvent(new Event('change'));
+        });
+        
+        premiumLabel.addEventListener('click', function() {
+            pricingSwitch.checked = true;
+            pricingSwitch.dispatchEvent(new Event('change'));
+        });
+    }
+    
+    // FAQ accordion
+    const faqItems = document.querySelectorAll('.faq-item');
+    
+    faqItems.forEach(item => {
+        const question = item.querySelector('.faq-question');
+        
+        if (question) {
+            question.addEventListener('click', function() {
+                const isActive = item.classList.contains('active');
+                
+                // Close all FAQ items
+                faqItems.forEach(faq => {
+                    faq.classList.remove('active');
+                });
+                
+                // If the clicked item wasn't active, make it active
+                if (!isActive) {
+                    item.classList.add('active');
+                }
+            });
+        }
+    });
+    
+    // Contact form validation
     const contactForm = document.querySelector('.contact-form');
     
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            // Simple validation example
             let isValid = true;
             const requiredFields = contactForm.querySelectorAll('[required]');
             
@@ -167,17 +213,26 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             
             if (isValid) {
-                // Here you would normally send the form data to a server
-                // For demo purposes, show a success message
-                alert('Thank you for your message! We will contact you shortly.');
+                // Here you would typically send the form data to the server
+                alert('Thank you for your quote request! Our team will contact you shortly.');
                 contactForm.reset();
             } else {
                 alert('Please fill in all required fields correctly.');
             }
         });
+        
+        // Clear error class on input
+        const formInputs = contactForm.querySelectorAll('input, select, textarea');
+        formInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    this.classList.remove('error');
+                }
+            });
+        });
     }
-
-    // Newsletter form 
+    
+    // Newsletter form
     const newsletterForm = document.querySelector('.newsletter-form');
     
     if (newsletterForm) {
@@ -185,7 +240,6 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             
             const emailInput = newsletterForm.querySelector('input[type="email"]');
-            const consentCheckbox = newsletterForm.querySelector('#consent');
             
             if (emailInput && emailInput.value.trim()) {
                 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -195,12 +249,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     return;
                 }
                 
-                if (consentCheckbox && !consentCheckbox.checked) {
-                    alert('Please confirm your consent to receive emails.');
-                    return;
-                }
-                
-                // Here you would normally send the subscription request to a server
+                // Here you would typically send the subscription request to a server
                 alert('Thank you for subscribing to our newsletter!');
                 newsletterForm.reset();
             } else {
@@ -208,24 +257,30 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-
-    // Initialize animation on scroll
-    function animateOnScroll() {
-        const elements = document.querySelectorAll('.service-card, .blog-post, .pricing-card');
+    
+    // Add animation classes on scroll
+    const animatedElements = document.querySelectorAll('.service-card, .timeline-item, .pricing-card, .contact-method');
+    
+    function checkIfInView() {
         const windowHeight = window.innerHeight;
+        const windowTopPosition = window.scrollY;
+        const windowBottomPosition = windowTopPosition + windowHeight;
         
-        elements.forEach(element => {
-            const elementPosition = element.getBoundingClientRect().top;
+        animatedElements.forEach(element => {
+            const elementRect = element.getBoundingClientRect();
+            const elementTopPosition = elementRect.top + windowTopPosition;
+            const elementBottomPosition = elementRect.bottom + windowTopPosition;
             
-            if (elementPosition < windowHeight - 100) {
+            // Check if element is in view
+            if (elementBottomPosition > windowTopPosition && elementTopPosition < windowBottomPosition) {
                 element.classList.add('animate');
             }
         });
     }
     
-    // Initial check for elements in viewport
-    animateOnScroll();
+    // Check elements on initial load
+    setTimeout(checkIfInView, 100);
     
-    // Check on scroll
-    window.addEventListener('scroll', animateOnScroll);
+    // Check elements on scroll
+    window.addEventListener('scroll', checkIfInView);
 });
